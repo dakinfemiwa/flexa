@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Flexa
 
-## Getting Started
+Flexa is a student-facing adaptive A-level Maths practice platform. It helps students turn a wrong answer into a better next attempt by keeping the mathematical skill in focus while changing the question style, context, or representation.
 
-First, run the development server:
+The core learning loop is:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+`attempt -> diagnose -> adapt -> retry -> measure improvement`
+
+## What the app does
+
+The dashboard gives a student a focused view of their practice:
+
+- an adaptive session with a recommended next question set
+- weekly accuracy and attempt progress
+- progress across learning objectives such as SUVAT fundamentals, variable acceleration, and motion graphs
+- recent practice results
+- a clear explanation that the next question can change representation without changing the underlying skill
+
+The current interface is the first usable product surface. Its system-status indicator verifies that the Next.js frontend can reach the backend and that the backend can reach its configured database.
+
+## Architecture
+
+Flexa is a modular full-stack application:
+
+- **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS, and shadcn-style UI primitives
+- **Backend:** FastAPI modular monolith with versioned REST endpoints
+- **Persistence:** SQLAlchemy and Alembic, configured for PostgreSQL in deployed environments
+- **Local development:** SQLite is the default database for a zero-setup health check
+- **Deployment target:** Vercel for the frontend, Render for the backend, and managed PostgreSQL
+
+The frontend never receives database credentials. It calls the backend through the API client in `lib/api.ts`.
+
+## Run locally
+
+Install frontend dependencies:
+
+```powershell
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create and install the backend environment:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```powershell
+python -m venv backend\.venv
+backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start the API from the repository root:
 
-## Learn More
+```powershell
+$env:PYTHONPATH="backend"
+backend\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --reload --port 8000
+```
 
-To learn more about Next.js, take a look at the following resources:
+In a second terminal, start Next.js:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```powershell
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open `http://localhost:3000`. The API health endpoint is available at `http://localhost:8000/api/v1/health`.
 
-## Deploy on Vercel
+Set `DATABASE_URL` in `backend/.env` to use PostgreSQL. Set `NEXT_PUBLIC_API_URL` in `.env.local` when the backend runs at a non-default URL. Example files are provided in the repository root and `backend/`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Quality checks
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```powershell
+npm run lint
+npm run build
+$env:PYTHONPATH="backend"
+backend\.venv\Scripts\python.exe -m pytest backend\tests -q
+backend\.venv\Scripts\python.exe -m alembic -c backend\alembic.ini check
+```

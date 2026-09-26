@@ -1,69 +1,113 @@
-import Image from "next/image";
+import {
+  ArrowUpRight,
+  BarChart3,
+  BookOpen,
+  CheckCircle2,
+  ChevronRight,
+  CircleHelp,
+  Flame,
+  Gauge,
+  Home as HomeIcon,
+  Menu,
+  Settings2,
+  Sparkles,
+  Target,
+} from "lucide-react";
 
-export default function Home() {
+import { getHealth } from "@/lib/api";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
+
+const objectives = [
+  { name: "SUVAT fundamentals", detail: "Choose and use the right equation", progress: 72 },
+  { name: "Variable acceleration", detail: "Build a model from a context", progress: 48 },
+  { name: "Motion graphs", detail: "Read and interpret representations", progress: 31 },
+];
+
+const activity = [
+  { title: "SUVAT fundamentals", result: "4 / 5 correct", time: "Today", tone: "success" as const },
+  { title: "Motion graphs", result: "3 / 5 correct", time: "Yesterday", tone: "warning" as const },
+  { title: "Variable acceleration", result: "2 / 4 correct", time: "Mon", tone: "muted" as const },
+];
+
+export default async function Home() {
+  let health: Awaited<ReturnType<typeof getHealth>> | null = null;
+
+  try {
+    health = await getHealth();
+  } catch {
+    health = null;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-screen bg-[#080d18] text-slate-100">
+      <div className="mx-auto flex min-h-screen max-w-[1500px]">
+        <aside className="hidden w-64 shrink-0 border-r border-slate-800/80 px-5 py-7 lg:block">
+          <div className="flex items-center gap-3 px-2">
+            <div className="grid size-9 place-items-center rounded-xl bg-cyan-300 text-slate-950 shadow-[0_0_24px_rgba(103,232,249,0.2)]">
+              <Sparkles className="size-5" />
+            </div>
+            <div>
+              <p className="font-semibold tracking-tight">flexa</p>
+              <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500">adaptive maths</p>
+            </div>
+          </div>
+
+          <nav className="mt-12 space-y-1" aria-label="Main navigation">
+            <a className="flex items-center gap-3 rounded-lg bg-slate-800/80 px-3 py-2.5 text-sm font-medium text-cyan-200" href="#overview"><HomeIcon className="size-4" />Overview</a>
+            <a className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition hover:bg-slate-900 hover:text-slate-100" href="#practice"><BookOpen className="size-4" />Practice</a>
+            <a className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-400 transition hover:bg-slate-900 hover:text-slate-100" href="#progress"><BarChart3 className="size-4" />Progress</a>
+          </nav>
+
+          <div className="mt-auto pt-32">
+            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-300"><CircleHelp className="size-4 text-cyan-300" />Need a nudge?</div>
+              <p className="mt-2 text-xs leading-5 text-slate-500">Your next set changes the question style, not the skill.</p>
+              <a href="#how-it-works" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "mt-3 px-0 text-cyan-300")}>How it works <ArrowUpRight className="size-3.5" /></a>
+            </div>
+            <a className="mt-5 flex items-center gap-3 px-3 py-2 text-sm text-slate-500 hover:text-slate-200" href="#settings"><Settings2 className="size-4" />Settings</a>
+          </div>
+        </aside>
+
+        <section className="min-w-0 flex-1 px-5 py-6 sm:px-8 lg:px-12 lg:py-8">
+          <header className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 lg:hidden"><Menu className="size-5 text-slate-400" /><span className="font-semibold">flexa</span></div>
+            <div className="hidden lg:block"><p className="text-sm text-slate-500">Saturday, 26 September 2026</p><h1 className="mt-1 text-2xl font-semibold tracking-tight">Good morning, Alex.</h1></div>
+            <div className="flex items-center gap-3">
+              <div className="hidden items-center gap-2 rounded-full border border-slate-800 px-3 py-1.5 text-xs text-slate-400 sm:flex"><span className={cn("size-2 rounded-full", health ? "bg-emerald-400" : "bg-rose-400")} />{health ? "All systems ready" : "Offline mode"}</div>
+              <div className="grid size-9 place-items-center rounded-full bg-violet-300 font-semibold text-slate-950">A</div>
+            </div>
+          </header>
+
+          <div id="overview" className="mt-8 grid gap-5 xl:grid-cols-[1.35fr_0.65fr]">
+            <Card className="relative overflow-hidden border-cyan-300/20 bg-[radial-gradient(circle_at_90%_0%,rgba(103,232,249,0.16),transparent_38%),linear-gradient(135deg,#102236,#0d1524)]">
+              <CardContent className="relative p-6 sm:p-8">
+                <Badge><Sparkles className="mr-1.5 size-3.5" />Your adaptive session</Badge>
+                <h2 className="mt-5 max-w-lg text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">Turn today&apos;s mistakes into tomorrow&apos;s confidence.</h2>
+                <p className="mt-4 max-w-md text-sm leading-6 text-slate-300">Continue with a question on SUVAT fundamentals. Same skill, a fresh representation.</p>
+                <a href="#practice" className={cn(buttonVariants(), "mt-7")}>Continue practice <ChevronRight className="size-4" /></a>
+                <div className="mt-8 flex items-center gap-3 text-xs text-slate-400"><div className="flex -space-x-1"><span className="size-6 rounded-full border-2 border-[#102236] bg-cyan-200" /><span className="size-6 rounded-full border-2 border-[#102236] bg-violet-300" /><span className="size-6 rounded-full border-2 border-[#102236] bg-amber-200" /></div> 5 questions · approximately 8 minutes</div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><div className="flex items-center justify-between"><CardTitle className="text-base">This week</CardTitle><Flame className="size-5 text-amber-300" /></div><CardDescription>Small steps compound.</CardDescription></CardHeader>
+              <CardContent><div className="flex items-end gap-3"><span className="text-5xl font-semibold tracking-tight">68%</span><span className="mb-2 text-sm text-emerald-300">+12% <span className="text-slate-500">vs last week</span></span></div><Progress className="mt-5" value={68} /><div className="mt-3 flex justify-between text-xs text-slate-500"><span>17 attempts</span><span>Target: 75%</span></div></CardContent>
+            </Card>
+          </div>
+
+          <div id="progress" className="mt-8 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+            <Card><CardHeader><div className="flex items-center justify-between"><div><CardTitle>Learning objectives</CardTitle><CardDescription className="mt-1">Your progress across the mechanics toolkit.</CardDescription></div><Target className="size-5 text-cyan-300" /></div></CardHeader><CardContent className="space-y-5">{objectives.map((objective) => <div key={objective.name}><div className="mb-2 flex items-center justify-between gap-4"><div><p className="text-sm font-medium text-slate-200">{objective.name}</p><p className="mt-0.5 text-xs text-slate-500">{objective.detail}</p></div><span className="text-sm font-semibold text-slate-300">{objective.progress}%</span></div><Progress value={objective.progress} /></div>)}</CardContent></Card>
+
+            <Card><CardHeader><div className="flex items-center justify-between"><div><CardTitle>Recent practice</CardTitle><CardDescription className="mt-1">Your latest adaptive sets.</CardDescription></div><Gauge className="size-5 text-violet-300" /></div></CardHeader><CardContent className="space-y-1">{activity.map((item) => <div key={item.title} className="flex items-center gap-3 rounded-lg px-2 py-3"><CheckCircle2 className={cn("size-4 shrink-0", item.tone === "success" ? "text-emerald-300" : item.tone === "warning" ? "text-amber-300" : "text-slate-500")} /><div className="min-w-0 flex-1"><p className="truncate text-sm font-medium text-slate-200">{item.title}</p><p className="text-xs text-slate-500">{item.time}</p></div><Badge variant={item.tone}>{item.result}</Badge></div>)}</CardContent></Card>
+          </div>
+
+          <footer id="how-it-works" className="mt-8 flex flex-col gap-3 border-t border-slate-800/80 py-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between"><p>Flexa adapts the next question to your last attempt.</p><p>Built for thoughtful practice, not streaks.</p></footer>
+        </section>
+      </div>
+    </main>
   );
 }
