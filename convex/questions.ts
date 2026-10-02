@@ -8,7 +8,9 @@ export const listForObjective = query({
     await requireIdentity(ctx);
     const questions = await ctx.db
       .query("questions")
-      .withIndex("by_learning_objective", (query) => query.eq("learningObjectiveId", args.learningObjectiveId))
+      .withIndex("by_learning_objective", (query) =>
+        query.eq("learningObjectiveId", args.learningObjectiveId),
+      )
       .order("asc")
       .collect();
 

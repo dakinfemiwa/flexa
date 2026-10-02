@@ -14,11 +14,10 @@ import {
     Target,
 } from "lucide-react";
 
+import { AuthControls } from "@/components/auth-controls";
+import { PracticePanel } from "@/components/practice-panel";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
-import { AuthControls } from "@/components/auth-controls";
-import { UserGreeting } from "@/components/user-greeting";
-import { PracticePanel } from "@/components/practice-panel";
 import {
     Card,
     CardContent,
@@ -27,6 +26,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { UserGreeting } from "@/components/user-greeting";
 import { getHealth } from "@/lib/api";
 import { cn } from "@/lib/utils";
 

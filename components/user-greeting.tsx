@@ -11,9 +11,13 @@ export function UserGreeting() {
     <>
       <div className="hidden lg:block">
         <p className="text-sm text-slate-500">Your adaptive learning space</p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight">Good morning, {name}.</h1>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+          Good morning, {name}.
+        </h1>
       </div>
-      <div className="grid size-9 place-items-center rounded-full bg-violet-300 font-semibold text-slate-950">{initial}</div>
+      <div className="grid size-9 place-items-center rounded-full bg-violet-300 font-semibold text-slate-950">
+        {initial}
+      </div>
     </>
   );
 }

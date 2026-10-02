@@ -29,8 +29,9 @@ export const record = mutation({
     }
 
     const parsedAnswer = Number(args.submittedAnswer.trim());
-    const correct = Number.isFinite(parsedAnswer)
-      && Math.abs(parsedAnswer - question.expectedAnswer) <= question.tolerance;
+    const correct =
+      Number.isFinite(parsedAnswer) &&
+      Math.abs(parsedAnswer - question.expectedAnswer) <= question.tolerance;
     const createdAt = Date.now();
 
     const attemptId = await ctx.db.insert("attempts", {
@@ -45,11 +46,14 @@ export const record = mutation({
     const previousProgress = await ctx.db
       .query("studentObjectiveProgress")
       .withIndex("by_user_objective", (query) =>
-        query.eq("userId", user._id).eq("learningObjectiveId", question.learningObjectiveId),
+        query
+          .eq("userId", user._id)
+          .eq("learningObjectiveId", question.learningObjectiveId),
       )
       .unique();
     const questionsAttempted = (previousProgress?.questionsAttempted ?? 0) + 1;
-    const questionsCorrect = (previousProgress?.questionsCorrect ?? 0) + (correct ? 1 : 0);
+    const questionsCorrect =
+      (previousProgress?.questionsCorrect ?? 0) + (correct ? 1 : 0);
 
     const progress = {
       userId: user._id,

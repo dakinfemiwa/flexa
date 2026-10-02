@@ -1,4 +1,4 @@
-import type { QueryCtx, MutationCtx } from "../_generated/server";
+import type { MutationCtx, QueryCtx } from "../_generated/server";
 
 export type AuthenticatedIdentity = {
   clerkId: string;
@@ -6,7 +6,9 @@ export type AuthenticatedIdentity = {
   email: string;
 };
 
-export async function requireIdentity(ctx: QueryCtx | MutationCtx): Promise<AuthenticatedIdentity> {
+export async function requireIdentity(
+  ctx: QueryCtx | MutationCtx,
+): Promise<AuthenticatedIdentity> {
   const identity = await ctx.auth.getUserIdentity();
 
   if (!identity) {
